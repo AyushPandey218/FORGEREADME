@@ -40,7 +40,6 @@ export default function Home() {
     funFact: "",
     selectedBanner: "none",
     kofi: "",
-    terminalBio: "",
   });
 
   const [selectedTech, setSelectedTech] = useState<typeof TECH_STACK>([]);
@@ -57,8 +56,7 @@ export default function Home() {
     trophies: false,
     activityGraph: false,
     showVisitorCounter: false,
-    marqueeTech: false,
-    floatingIcons: false,
+    techIconsOnly: false,
     glitchTyping: false,
   });
   const [customization, setCustomization] = useState({
@@ -109,7 +107,6 @@ export default function Home() {
       funFact: "",
       selectedBanner: "none",
       kofi: "",
-      terminalBio: "",
     });
     setSelectedTech([]);
     setSelectedHobbies([]);
@@ -123,8 +120,7 @@ export default function Home() {
       trophies: false,
       activityGraph: false,
       showVisitorCounter: false,
-      marqueeTech: false,
-      floatingIcons: false,
+      techIconsOnly: false,
       glitchTyping: false,
     });
   };
@@ -203,7 +199,6 @@ export default function Home() {
     if (formData.bio) score += 15;
     if (selectedTech.length > 0) score += 15;
     if (formData.email || formData.website || formData.linkedin) score += 15;
-    if (formData.terminalBio) score += 5;
     return score;
   };
 
@@ -222,8 +217,7 @@ export default function Home() {
         trophies: false,
         activityGraph: false,
         showVisitorCounter: false,
-        marqueeTech: false,
-        floatingIcons: false,
+        techIconsOnly: false,
         glitchTyping: false,
       });
       setCustomization(prev => ({ ...prev, selectedBanner: "none", showQuote: false }));
@@ -244,14 +238,10 @@ export default function Home() {
       sections.push(`---`);
     }
 
-    sections.push(`Hi <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">, I'm ${formData.name || "Your Name"}`);
+    sections.push(`# Hi <img src="https://raw.githubusercontent.com/MartinHeinz/MartinHeinz/master/wave.gif" width="30px">, I'm ${formData.name || "Your Name"}`);
 
     if (formData.bio) {
       sections.push(`> ${formData.bio}`);
-    }
-
-    if (formData.terminalBio) {
-      sections.push(`<p align="center">\n<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&pause=1000&color=4F46E5&center=true&vCenter=true&width=700&lines=${encodeURIComponent(formData.terminalBio)}" />\n</p>`);
     }
 
     sections.push(`---`);
@@ -259,10 +249,10 @@ export default function Home() {
     // Typing effect (Animation)
     if (showStats.glitchTyping) {
       const lines = [formData.title || "Developer", formData.learning || "Learning New Tech", "Open Source Contributor"];
-      sections.push(`<div align="center">\n  <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=35&pause=1000&color=F0F&center=true&vCenter=true&width=600&lines=${lines.map(l => encodeURIComponent(l)).join(";")}" alt="Glitch Typing SVG" />\n</div>`);
+      sections.push(`<div align="center">\n  <img src="https://readme-typing-svg.demolab.com?font=Orbitron&weight=700&size=35&pause=1000&color=F0F&center=true&vCenter=true&width=600&lines=${lines.map(l => encodeURIComponent(l)).join(";")}" alt="Glitch Typing SVG" />\n</div>`);
       sections.push(`---`);
     } else if (showStats.typingSVG) {
-      sections.push(`<div align="center">\n  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=4F46E5&center=true&vCenter=true&width=435&lines=${encodeURIComponent(formData.title || "Developer")};${encodeURIComponent(formData.learning || "Learning New Tech")};Open+Source+Contributor" alt="Typing SVG" />\n</div>`);
+      sections.push(`<div align="center">\n  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=4F46E5&center=true&vCenter=true&width=435&lines=${encodeURIComponent(formData.title || "Developer")};${encodeURIComponent(formData.learning || "Learning New Tech")};Open+Source+Contributor" alt="Typing SVG" />\n</div>`);
       sections.push(`---`);
     }
 
@@ -288,7 +278,7 @@ export default function Home() {
     // Technology Stack & Visuals
     if (selectedTech.length > 0) {
       sections.push(`💻 Tech Stack:`);
-      if (showStats.marqueeTech) {
+      if (showStats.techIconsOnly) {
         const skillSlugs = selectedTech
           .map(tech => tech.skillicon ? tech.skillicon.toLowerCase() : null)
           .filter(Boolean)
@@ -296,17 +286,7 @@ export default function Home() {
 
         if (skillSlugs) {
           sections.push(`<p align="center">\n<img src="https://skillicons.dev/icons?i=${skillSlugs}" />\n</p>`);
-        } else {
-          const badges = selectedTech.map(tech =>
-            `![${tech.name}](https://img.shields.io/badge/${tech.name.replace(/ /g, "%20")}-${tech.color}?style=for-the-badge&logo=${tech.icon}&logoColor=white)`
-          ).join(" ");
-          sections.push(badges);
         }
-      } else if (showStats.floatingIcons) {
-        const floatingIcons = selectedTech.map((tech) =>
-          `<img src="${getIconUrl(tech)}" width="40" height="40" alt="${tech.name}"/>`
-        ).join(" ");
-        sections.push(`<p align="center">\n${floatingIcons}\n</p>`);
       } else {
         const badges = selectedTech.map(tech =>
           `![${tech.name}](https://img.shields.io/badge/${tech.name.replace(/ /g, "%20")}-${tech.color}?style=for-the-badge&logo=${tech.icon}&logoColor=white)`
@@ -393,6 +373,13 @@ export default function Home() {
         sections.push(`![Top Languages](https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=${formData.github}&theme=${theme}&show_icons=true&include_all_commits=true&count_private=true&layout=compact)`);
       }
 
+      sections.push(`---`);
+    }
+
+    // Random Dev Quote
+    if (customization.showQuote) {
+      sections.push(`### ✍️ Random Dev Quote`);
+      sections.push(`![Quote](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=${customization.theme})`);
       sections.push(`---`);
     }
 
@@ -924,37 +911,29 @@ export default function Home() {
                         </div>
 
                         <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Zap className="w-4 h-4 text-indigo-600" />
-                            <span className="text-xs font-bold text-slate-700 uppercase tracking-tight">Tech Stack Visuals</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2">
-                            {[
-                              { id: "marqueeTech", label: "Marquee", description: "Infinite Scroll" },
-                              { id: "floatingIcons", label: "Floating", description: "3D Animation" },
-                            ].map((anim) => (
-                              <button
-                                key={anim.id}
-                                onClick={() => {
-                                  if (anim.id === "marqueeTech") {
-                                    setShowStats(prev => ({ ...prev, marqueeTech: !prev.marqueeTech, floatingIcons: false }));
-                                  } else {
-                                    setShowStats(prev => ({ ...prev, floatingIcons: !prev.floatingIcons, marqueeTech: false }));
-                                  }
-                                }}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Zap className="w-4 h-4 text-indigo-600" />
+                              <span className="text-xs font-bold text-slate-700 uppercase tracking-tight">Display Style</span>
+                            </div>
+                            <button
+                              onClick={() => setShowStats(prev => ({ ...prev, techIconsOnly: !prev.techIconsOnly }))}
+                              className={cn(
+                                "relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none",
+                                showStats.techIconsOnly ? "bg-indigo-600" : "bg-slate-300"
+                              )}
+                            >
+                              <span
                                 className={cn(
-                                  "flex flex-col items-start p-2 rounded-lg border text-left transition-all",
-                                  showStats[anim.id as keyof typeof showStats]
-                                    ? "bg-indigo-600 border-indigo-600 text-white shadow-md shadow-indigo-200"
-                                    : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                                  "inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform",
+                                  showStats.techIconsOnly ? "translate-x-4.5" : "translate-x-1"
                                 )}
-                              >
-                                <span className="font-bold text-[10px] leading-tight">{anim.label}</span>
-                                <span className={cn("text-[8px] leading-tight", showStats[anim.id as keyof typeof showStats] ? "text-indigo-100" : "text-slate-400")}>{anim.description}</span>
-                              </button>
-                            ))}
+                              />
+                            </button>
                           </div>
-                          <p className="text-[9px] text-slate-400 italic mt-1">Select icons above to see animation</p>
+                          <p className="text-[10px] text-slate-500">
+                            {showStats.techIconsOnly ? "Showing simple icons." : "Showing detailed badges."}
+                          </p>
                         </div>
                       </div>
                     )}
@@ -1129,20 +1108,6 @@ export default function Home() {
                   </div>
 
                   <div className="space-y-6">
-                    <div className="space-y-2 pb-6 border-b border-slate-100">
-                      <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                        <Code2 className="w-4 h-4 text-indigo-500" />
-                        Terminal Bio (Animation)
-                      </label>
-                      <textarea
-                        name="terminalBio"
-                        value={formData.terminalBio}
-                        onChange={handleChange}
-                        placeholder="echo 'Hello World! I am a full-stack developer based in...'"
-                        rows={2}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm font-mono"
-                      />
-                    </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[
@@ -1338,36 +1303,6 @@ export default function Home() {
                           </div>
                         )}
 
-                        {formData.terminalBio && (
-                          <div className="bg-[#1e1e1e] rounded-lg border border-slate-700 overflow-hidden shadow-2xl my-4 font-mono">
-                            <div className="bg-[#323232] px-3 py-1.5 flex items-center gap-1.5 border-b border-white/5">
-                              <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
-                              <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
-                              <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
-                              <div className="flex-1 text-center text-[10px] text-slate-400 font-sans tracking-wide">zsh — bio</div>
-                            </div>
-                            <div className="p-4 text-sm">
-                              <div className="flex gap-2">
-                                <span className="text-emerald-400">➜</span>
-                                <span className="text-blue-400">~</span>
-                                <span className="text-white">whoami</span>
-                              </div>
-                              <div className="mt-1 text-slate-300">
-                                {formData.name || "user"}
-                              </div>
-                              <div className="mt-3 flex gap-2">
-                                <span className="text-emerald-400">➜</span>
-                                <span className="text-blue-400">~</span>
-                                <span className="text-white italic">echo "{formData.terminalBio}"</span>
-                              </div>
-                              <div className="mt-1 text-indigo-300 leading-relaxed border-l-2 border-indigo-500/30 pl-3">
-                                {formData.terminalBio}
-                                <span className="inline-block w-2 h-4 bg-indigo-500 ml-1 animate-pulse align-middle" />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        <div className="border-b border-slate-800" />
 
                         {(showStats.glitchTyping || showStats.typingSVG) && (
                           <>
@@ -1471,30 +1406,21 @@ export default function Home() {
                           <>
                             <div className="space-y-4">
                               <div className="text-lg font-bold text-indigo-400">💻 Tech Stack:</div>
-                              {showStats.marqueeTech ? (
-                                <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden group">
-                                  <div className="flex gap-8 animate-marquee whitespace-nowrap">
-                                    {[...selectedTech, ...selectedTech].map((tech, i) => (
-                                      <img key={`${tech.name}-${i}`} src={getIconUrl(tech)} alt={tech.name} className="h-8 w-8 transition-transform hover:scale-110" />
-                                    ))}
+                              {showStats.techIconsOnly ? (
+                                <div className="p-4 bg-slate-800/50 rounded-xl border border-slate-700 overflow-hidden">
+                                  <div className="flex flex-wrap justify-center gap-4">
+                                    {(() => {
+                                      const skillSlugs = selectedTech
+                                        .map(t => t.skillicon ? t.skillicon.toLowerCase() : null)
+                                        .filter(Boolean)
+                                        .join(",");
+                                      return skillSlugs ? (
+                                        <img src={`https://skillicons.dev/icons?i=${skillSlugs}`} alt="Tech Stack" />
+                                      ) : (
+                                        <p className="text-slate-500 text-xs italic">Select technologies with available icons to see preview</p>
+                                      );
+                                    })()}
                                   </div>
-                                  <style jsx>{`
-                                    @keyframes marquee {
-                                      0% { transform: translateX(0); }
-                                      100% { transform: translateX(-50%); }
-                                    }
-                                    .animate-marquee {
-                                      animation: marquee 20s linear infinite;
-                                    }
-                                  `}</style>
-                                </div>
-                              ) : showStats.floatingIcons ? (
-                                <div className="flex flex-wrap justify-center gap-6 p-6 bg-slate-800/50 rounded-xl border border-slate-700">
-                                  {selectedTech.map((tech, i) => (
-                                    <div key={tech.name} className="animate-bounce" style={{ animationDelay: `${i * 0.2}s`, animationDuration: '3s' }}>
-                                      <img src={getIconUrl(tech)} alt={tech.name} className="w-10 h-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]" />
-                                    </div>
-                                  ))}
                                 </div>
                               ) : (
                                 <div className="flex flex-wrap gap-2">
@@ -1588,7 +1514,7 @@ export default function Home() {
             <span className="text-sm font-semibold">Have a suggestion? Email me</span>
           </a>
         </div>
-      </main>
+      </main >
 
       <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200 mt-12">
         <div className="flex flex-col items-center justify-center gap-6">
@@ -1637,6 +1563,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
